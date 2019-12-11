@@ -1,13 +1,9 @@
 <?php
-
-
 //include UserController file
 require_once '../Controller/AttendanceController.php';
 
 // if form is submitted
  if(isset($_POST['submit'])){
-
-
 
   $attendance= new AttendanceController();
   $attendance->add('AddMath');
