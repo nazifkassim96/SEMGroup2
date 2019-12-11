@@ -6,7 +6,6 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
 }
-
 /* Style the header */
 header {
     background-color: #ccc;
@@ -16,7 +15,6 @@ header {
     color: #8E44AD;
     font-family: 'Fjalla One', sans-serif;
 }
-
 /* Create two columns/boxes that floats next to each other */
 nav {
     float: left;
