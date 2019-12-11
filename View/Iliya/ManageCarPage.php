@@ -51,7 +51,9 @@
 <?php include"Include/MetaLink.php";?>
 <?php include"Style.php";?>
 <?php include"Include/AdminHeader.php";?>
-
+<head>
+	<link rel="stylesheet" href="backgroundcss.css">
+</head>
 <form method="post">
 <div class="w3-content">
   <div class="w3-twothird">
