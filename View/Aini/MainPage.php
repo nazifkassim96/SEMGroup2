@@ -1,155 +1,142 @@
-<style>
+<!DOCTYPE html>
 
-td{
+<?php
+include 'config.php';
 
-    padding: 0px 0px;
+ if (isset($_REQUEST['ok']))
+ {
+$user_name = $_REQUEST["username"];
+$user_password = $_REQUEST["password"];
+
+$result=mysqli_query($link,"select * from user where Username='$user_name' AND Password='$user_password'") or die (mysqli_error($link));
+		
+$count=mysqli_num_rows($result);
+$row=mysqli_fetch_array($result);
+$user_type = $row['User_type'];
+$user_id = $row['UserID'];
+
+if ($count > 0) 
+  {
+  session_start();
+  $_SESSION['userID']=$row['UserID']; 
+  if($user_type=="customer"){
+  $result=mysqli_query($link,"select * from customer where userID='$user_id'") or die (mysqli_error($link));
+  $count=mysqli_num_rows($result);
+  $row=mysqli_fetch_array($result);
+  $_SESSION["CustomerID"]= $row['CustomerID'];
+  
+  echo "<script language=javascript>  window.location.href='CustomerHomePage.php' </script>";
+  } else 
+  {
+  $result=mysqli_query($link,"select * from admin where userID='$user_id'") or die (mysqli_error($link));
+  $count=mysqli_num_rows($result);
+  $row=mysqli_fetch_array($result);
+  $_SESSION["AdminID"]= $row['AdminID'];
+  echo "<script language=javascript>  window.location.href='AdministratorHomePage.php' </script>";
+  }
 }
-header {
-    padding: 5px 0px;
-    text-align: center;
-    font-size: 35px;
-    color: #8E44AD;
-    font-family: 'Fjalla One', sans-serif;
-}
-
-body
+else
 {
-	background-image:url(imgback.jpg)
+echo "<script language=javascript> alert(\"Invalid Password And Username, Please Try Again.\");</script>"; 
+}
+mysqli_close($link);
+}
+?>
+
+<html lang="en">
+<title>Welcome to Car Rental System</title>
+
+<?php include"Include/MetaLink.php";?>
+<?php include"Style.php";?>
+
+<script type="text/javascript">
+function setFocus()
+{
+     document.getElementById("username").focus();
 }
 
+function focusReset(){
+		   document.login.username.value="";
+		   document.login.password.value="";
+		   document.login.username.focus();
+		}
 
-.toright {
-    margin: 10cm;
-    width: 60%;
-    border: 3px solid #73AD21;
-    padding: 10px;
+function Blank_Validator()
+{
+if (document.login.user.value == "" ) 
+{
+     alert("Please fill the user name.");
+    document.login.username.focus();
+  return (false);
 }
-
-.navbar {
-    overflow: hidden;
-    background-color: #0A2229;
-    font-family: Arial, Helvetica, sans-serif;
+else  if (document.login.user_password.value == ""  ){
+ alert("Please fill the password.");
+   document.login.username.focus();
+     return (false);
 }
-
-.navbar a {
-    
-    font-size: 16px;
-    color: white;
-    padding: 20px 12px;
-    text-decoration: none;
-	
-}
-
-.button {
-    background-color:#58ACFA;
-	border-radius: 25px;
-    border: none;
-    color: white;
-    padding: 10px 102px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-}
-.button2 {background-color: white;
-color:black
-
+return (true);
 }
 
-nav {
-    float: left;
-    width: 20%;
-    height: 30px;
-    padding: 20px;
-	display: inline-block;
-}
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-section:after {
-    content: "";
-    display: table;
-    clear: both;
-}
+</script>
 
- ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #0A2229;
-	
-}
+<body style="background-image: url('background.jpg'); opacity: 0.85";>
 
-li {
-    float: left;
-}
+<?php include"Include/MainPageHeader.php";?>
 
-li a {
-    display: block;
-    text-align: center;
-    padding: 10px 5px;
-    text-decoration: none;
-	color: white;
-}
+<div class="w3-row-padding w3-padding-64 w3-container">
+<div class="w3-content">
 
-li a:hover:not(.active) {
-    background-color: #111;
-}
+<body>
 
-.active {
-    background-color:#240B3B;
-}
+<form name="login" method="post" action="" onsubmit="return Blank_Validator()" novalidate>
+<div class="container">
+<div class="row">
+<div class="col-25">
+<label for="username">User Name</label>
+</div>
+<div class="col-75">
+<input type="text" id="username" name="username" placeholder="Enter your User ID" required>
+</div>
+</div>
 
-input[type=text] {
-    width: 10cm;
-	color: white
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-}
-footer {
-    background-color: #2E2E2E;
-    padding: 10px;
-    text-align: center;
-    color: white;
-}
-.dropbtn {
-    background-color: white;
-    color: black;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-}
+<div class="row">
+<div class="col-25">
+<label for="password">Password</label>
+</div>
+<div class="col-75">
+<input type="password" id="password" name="password" placeholder="Enter your password" required>
+<label>
+<input type="checkbox" checked="checked" name="remember"> Remember me
+</label>
+<span class="rpassword">Forgot <a href="ForgetPassword.php">password?</a></span>
+</div>
+</div><br>
 
-.dropdown {
-    position: relative;
-    display: inline-block;
+
+<div class="row">
+<div class="w3-bar">
+  <input type="submit" class="w3-block w3-right button w3-button" name="ok" value="Log-In">
+  <a href="RegisterInterface.php" class="w3-block w3-right button w3-button">Register</a>
+</div>
+</form>
+</div>
+</div>
+
+<?php include"Include/MainPageFooter.php";?>
+
+<script>
+// Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
 }
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
 }
+</script>
 
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {background-color:white;}
-
-.dropdown:hover .dropdown-content {display: block;}
-
-.dropdown:hover .dropbtn {background-color: white;}
-</style>
+</body>
+</html>
 
